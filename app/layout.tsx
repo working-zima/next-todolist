@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { FONT_NOTOSANSKR } from "@/public/assets/fonts/index";
+
+import { Toaster } from "@/components/ui/toast/toaster";
 
 /** 스타일 */
 import "@/public/styles/globals.css";
 import "@/public/styles/main.scss";
+import { FONT_NOTOSANSKR } from "@/public/assets/fonts/index";
 
 export const metadata: Metadata = {
   title: "TODO-LIST",
@@ -18,9 +20,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={FONT_NOTOSANSKR.className}>
-        <div className="page">
-          <main className="page__main">{children}</main>
-        </div>
+        {children}
+        <Toaster />
       </body>
     </html>
   );
