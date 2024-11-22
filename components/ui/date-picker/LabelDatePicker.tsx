@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+
 import {
   Button,
   Calendar,
@@ -10,15 +11,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui";
-import { Calendar as CalendarIcon } from "lucide-react";
 
-interface Props {
+import { cn } from "@/lib/utils";
+
+import { CalendarIcon } from "@/public/assets/icons/index";
+
+type LabelDatePickerProps = {
   label: string;
   isReadOnly?: boolean;
-}
+};
 
-function LabelDatePicker({ label, isReadOnly }: Props) {
-  const [date, setDate] = useState<Date | undefined>();
+function LabelDatePicker({ label, isReadOnly }: LabelDatePickerProps) {
+  const [date, setDate] = useState<Date>();
 
   return (
     <div className="max-w-64 flex items-center gap-3">
