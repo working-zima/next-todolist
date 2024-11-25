@@ -2,81 +2,23 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { Button, SearchBar } from "@/components/ui";
 
 import { Task } from "@/types";
 
-import { useToast } from "@/hooks/use-toast";
-
-import { supabase } from "@/lib/supabase";
+import { useCreateTask, useGetTasks } from "@/hooks/api";
 
 function AsideSection() {
   const router = useRouter();
   const { id } = useParams();
-  const { toast } = useToast();
-
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  /** 생성된 TASK 테이블 데이터 전체 조회 */
-  const getTasks = async () => {
-    try {
-      const { data, status, error } = await supabase.from("todos").select("*");
-
-      if (error) throw new Error(error.message);
-
-      if (data !== null && status === 200) {
-        setTasks(data);
-      }
-    } catch (err) {
-      console.error(err);
-      toast({
-        variant: "destructive",
-        title: "에러가 발생했습니다.",
-        description: "예상치 못한 에러가 발생했습니다.",
-      });
-    }
-  };
-
-  /** Add New Page 버튼을 클릭 했을 때 TASK 생성 */
-  const handleCreateTask = async () => {
-    try {
-      const { data, status, error } = await supabase
-        .from("todos")
-        .insert([
-          {
-            title: "title",
-            start_date: null,
-            end_date: null,
-            boards: [],
-          },
-        ])
-        .select();
-
-      if (error) throw new Error(error.message);
-
-      if (status === 201 && data !== null) {
-        toast({
-          title: "새로운 TASK가 생성되었습니다.",
-          description: "나만의 TODO-BOARD를 생성해보세요.",
-        });
-
-        router.push(`/board/${data[0].id}`);
-      }
-    } catch (err) {
-      console.error(err);
-      toast({
-        variant: "destructive",
-        title: "에러가 발생했습니다.",
-        description: "예상치 못한 에러가 발생했습니다.",
-      });
-    }
-  };
+  const { tasks, getTasks } = useGetTasks();
+  const handleCreateTask = useCreateTask();
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [id]);
 
   return (
     <aside className="page__aside">
@@ -108,6 +50,7 @@ function AsideSection() {
                   className={`${
                     task.id === Number(id) && "bg-[#F5F5F5]"
                   } min-h-9 flex items-center gap-2 py-2 px-[10px] rounded-sm text-sm cursor-pointer`}
+                  onClick={() => router.push(`/board/${task.id}`)}
                 >
                   <div
                     className={`${

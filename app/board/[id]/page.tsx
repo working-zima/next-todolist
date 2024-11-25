@@ -11,7 +11,7 @@ import { Button, LabelDatePicker, Progress } from "@/components/ui";
 import { AlertPopup } from "@/components/common";
 import { BoardCard } from "@/components/common/board-card/BoardCard";
 
-import { Board, Task } from "@/types";
+import { Board } from "@/types";
 
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,7 +25,6 @@ function BoardPage() {
   const { id } = useParams();
   const { toast } = useToast();
 
-  const [task, setTask] = useState<Task>();
   const [boards, setBoards] = useState<Board[]>([]);
 
   const getTask = async () => {

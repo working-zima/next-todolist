@@ -1,6 +1,6 @@
 export type Task = {
   id: number;
-  title: string;
+  title: string | null;
   startDate: Date;
   endDate: Date;
   boards: Board[];
