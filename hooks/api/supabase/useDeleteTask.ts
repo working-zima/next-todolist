@@ -2,17 +2,16 @@ import { useParams, useRouter } from "next/navigation";
 
 import { supabase } from "@/lib/supabase";
 
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 function useDeleteTask() {
   const router = useRouter();
   const { id } = useParams();
-  const { toast } = useToast();
 
   const handleDeleteTask = async () => {
     try {
       const { status, error } = await supabase
-        .from("todos")
+        .from("tasks")
         .delete()
         .eq("id", Number(id));
 

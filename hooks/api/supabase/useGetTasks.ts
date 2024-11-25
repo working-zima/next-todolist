@@ -1,17 +1,15 @@
 import { supabase } from "@/lib/supabase";
 
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { useAtom } from "jotai";
 import { tasksAtom } from "@/stores/atoms";
 
 function useGetTasks() {
-  const { toast } = useToast();
-
   const [tasks, setTasks] = useAtom(tasksAtom);
 
   const getTasks = async () => {
     try {
-      const { data, status, error } = await supabase.from("todos").select("*");
+      const { data, status, error } = await supabase.from("tasks").select("*");
 
       if (error) {
         toast({

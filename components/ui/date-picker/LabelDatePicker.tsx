@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 import {
   Button,
@@ -12,18 +11,21 @@ import {
   PopoverTrigger,
 } from "@/components/ui";
 
-import { cn } from "@/lib/utils";
-
 import { CalendarIcon } from "@/public/assets/icons/index";
 
 type LabelDatePickerProps = {
   label: string;
+  value: Date | undefined;
   isReadOnly?: boolean;
+  onChange?: React.Dispatch<React.SetStateAction<Date | undefined>>;
 };
 
-function LabelDatePicker({ label, isReadOnly }: LabelDatePickerProps) {
-  const [date, setDate] = useState<Date>();
-
+function LabelDatePicker({
+  label,
+  value,
+  isReadOnly,
+  onChange,
+}: LabelDatePickerProps) {
   return (
     <div className="max-w-64 flex items-center gap-3">
       <small className="text-sm font-medium leading-none text-[#6D6D6D]">
@@ -35,20 +37,20 @@ function LabelDatePicker({ label, isReadOnly }: LabelDatePickerProps) {
             variant={"outline"}
             className={cn(
               "w-[280px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !value && "text-muted-foreground"
             )}
             disabled={isReadOnly} // "readOnly" 모드일 때 버튼 비활성화
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>날짜를 선택하세요.</span>}
+            {value ? format(value, "PPP") : <span>날짜를 선택하세요.</span>}
           </Button>
         </PopoverTrigger>
         {!isReadOnly && (
           <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={date}
-              onSelect={setDate}
+              selected={value}
+              onSelect={onChange}
               initialFocus
             />
           </PopoverContent>
