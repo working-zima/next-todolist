@@ -1,30 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useParams } from "next/navigation";
-
+import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
-import { nanoid } from "nanoid";
 import { supabase } from "@/lib/supabase";
-
-import { Board } from "@/types";
-import { toast } from "@/hooks/use-toast";
-
 import { useCreateBoard, useGetTaskById, useGetTasks } from "@/hooks/api";
-
+import { toast } from "@/hooks/use-toast";
+import { nanoid } from "nanoid";
+/** UI 컴포넌트 */
 import { AlertPopup, BoardCard } from "@/components/common";
 import { Button, Progress, LabelDatePicker } from "@/components/ui";
-import { ChevronLeft } from "lucide-react";
-
+import { ChevronLeft } from "@/public/assets/icons";
+/** 스타일 */
 import styles from "./page.module.scss";
+/** 타입 */
+import { Board } from "@/types";
 
-function BoardPage() {
+function BoardDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const { getTasks } = useGetTasks();
-  const { task } = useGetTaskById(Number(id));
+  const { task } = useGetTaskById(Number(id)); // 특정 id 값에 따른 TASK 데이터
   const createBoard = useCreateBoard();
 
+  /** Board Page에서 사용되는 상태값 */
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -73,7 +72,8 @@ function BoardPage() {
           title: "TASK 저장을 완료하였습니다.",
           description: "수정한 TASK의 마감일을 꼭 지켜주세요!",
         });
-
+        // 서버에서 데이터 갱신 후 상태값을 업데이트
+        // Aside-Section의 리스트 정보를 실시간으로 업데이트 하기 위해
         getTasks();
       }
 
@@ -85,6 +85,7 @@ function BoardPage() {
         });
       }
     } catch (error) {
+      /** 네트워크 오류나 예기치 않은 에러를 잡기 위해 catch 구문 사용 */
       console.error(error);
       toast({
         variant: "destructive",
@@ -98,20 +99,30 @@ function BoardPage() {
   useEffect(() => {
     if (task) {
       setTitle(task.title || "");
-      setStartDate(task.start_date);
-      setEndDate(task.end_date);
+      setStartDate(task.start_date ? new Date(task.start_date) : undefined);
+      setEndDate(task.end_date ? new Date(task.end_date) : undefined);
       setBoards(task.boards);
-      setCount(
-        task.boards.filter((board) => board.isCompleted === true).length
-      );
     }
   }, [task]);
+
+  useEffect(() => {
+    if (task?.boards) {
+      const completedCount = task.boards.filter(
+        (board: Board) => board.isCompleted
+      ).length;
+      setCount(completedCount);
+    }
+  }, [task?.boards]);
 
   return (
     <>
       <div className={styles.header}>
         <div className={styles[`header__btn-box`]}>
-          <Button variant={"outline"} size={"icon"}>
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => router.push("/")}
+          >
             <ChevronLeft />
           </Button>
           <div className="flex items-center gap-2">
@@ -137,11 +148,15 @@ function BoardPage() {
           {/* 진행상황 척도 그래프 섹션 */}
           <div className="flex items-center justify-start gap-4">
             <small className="text-sm font-medium leading-none text-[#6D6D6D]">
-              {count}/{boards.length} Completed
+              {count}/{task?.boards.length} Completed
             </small>
             <Progress
               className="w-60 h-[10px]"
-              value={(count / boards.length) * 100}
+              value={
+                task && task.boards.length > 0
+                  ? (count / task.boards.length) * 100
+                  : 0
+              }
             />
           </div>
         </div>
@@ -199,4 +214,4 @@ function BoardPage() {
   );
 }
 
-export default BoardPage;
+export default BoardDetailPage;

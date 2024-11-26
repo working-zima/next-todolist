@@ -36,6 +36,7 @@ export {
 } from "./dialog/dialog";
 export { Input } from "./input/input";
 export { LabelDatePicker } from "./date-picker/LabelDatePicker";
+export { Label } from "./label/label";
 export { Popover, PopoverTrigger, PopoverContent } from "./popover/popover";
 export { Progress } from "./progress/progress";
 export { SearchBar } from "./input/search-bar";

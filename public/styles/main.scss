@@ -3,11 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 
-  /* 스크롤 */
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
+
+  /* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
   ::-webkit-scrollbar {
-    /* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
     display: none;
   }
 }
@@ -21,6 +21,7 @@
 
   display: flex;
   align-items: center;
+  justify-content: center;
 
   &__aside {
     width: 282px;
