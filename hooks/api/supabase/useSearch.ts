@@ -7,6 +7,7 @@ import { tasksAtom } from "@/stores/atoms";
 
 function useSearch() {
   const [, setTasks] = useAtom(tasksAtom);
+
   const search = async (searchTerm: string) => {
     try {
       const { data, status, error } = await supabase
@@ -35,6 +36,7 @@ function useSearch() {
       });
     }
   };
+
   return { search };
 }
 

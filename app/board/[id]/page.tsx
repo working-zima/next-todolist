@@ -8,7 +8,7 @@ import { useCreateBoard, useGetTaskById, useGetTasks } from "@/hooks/api";
 import { toast } from "@/hooks/use-toast";
 import { nanoid } from "nanoid";
 /** UI 컴포넌트 */
-import { AlertPopup, BoardCard } from "@/components/common";
+import { DeleteTaskPopup, BoardCard } from "@/components/common";
 import { Button, Progress, LabelDatePicker } from "@/components/ui";
 import { ChevronLeft } from "@/public/assets/icons";
 /** 스타일 */
@@ -129,11 +129,11 @@ function BoardDetailPage() {
             <Button variant={"secondary"} onClick={handleSave}>
               저장
             </Button>
-            <AlertPopup>
+            <DeleteTaskPopup>
               <Button className="text-rose-600 bg-red-50 hover:bg-rose-50">
                 삭제
               </Button>
-            </AlertPopup>
+            </DeleteTaskPopup>
           </div>
         </div>
         <div className={styles.header__top}>
