@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-import { User } from "@/auth/type";
-
 import { createClient } from "@/lib/supabase/client";
 
-import { toast } from "@/hooks/use-toast";
+import { User } from "@/auth/type";
 
+import { toast } from "@/hooks/use-toast";
+/** UI 컴포넌트 */
 import {
   BadgeCheck,
   Bell,
@@ -41,12 +41,17 @@ export function NavUser({ user }: Props) {
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      router.push("/");
+
+      /** 쿠키 값 삭제(수정에 가까움 = 기간 만료) */
+      document.cookie = "user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+      /** 로컬스토리지 및 스토어 초기화 */
+      localStorage.removeItem("user");
 
       toast({
         title: "로그아웃을 완료하였습니다.",
-        description: "TASK 관리 앱을 사용해주셔서 감사합니다.",
+        description: "TASK 관리 앱을 사용해주셔서 감사합니다!",
       });
+      router.push("/");
 
       if (error) {
         toast({
@@ -56,6 +61,7 @@ export function NavUser({ user }: Props) {
         });
       }
     } catch (error) {
+      /** 네트워크 오류나 예기치 않은 에러를 잡기 위해 catch 구문 사용 */
       console.error(error);
       toast({
         variant: "destructive",
