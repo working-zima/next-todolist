@@ -1,7 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-
+/** UI 컴포넌트 */
+import { MarkdownEditorDialog } from "@/components/common";
 import {
   Button,
   Card,
@@ -9,21 +10,18 @@ import {
   LabelDatePicker,
   Separator,
 } from "@/components/ui";
-import { MarkdownEditorDialog } from "../markdown/MarkdownDialog";
-
+import { useDeleteBoard } from "@/hooks/api";
+import { ChevronUp } from "@/public/assets/icons";
+/** 타입 */
 import { Board } from "@/types";
 
-import { useDeleteBoard } from "@/hooks/api";
-
-import { ChevronUp } from "@/public/assets/icons/index";
-
-type useDeleteBoardProps = {
+interface Props {
   board: Board;
-};
+}
 
-function BoardCard({ board }: useDeleteBoardProps) {
+function BoardCard({ board }: Props) {
   const { id } = useParams();
-
+  /** TASK의 개별 TODO-BOARD 삭제(TODO-BOARD 1건 삭제) */
   const handleDeleteBoard = useDeleteBoard(Number(id), board.id);
 
   return (
@@ -35,8 +33,8 @@ function BoardCard({ board }: useDeleteBoardProps) {
           <input
             type="text"
             placeholder="등록된 제목이 없습니다."
-            className="w-full text-xl outline-none bg-transparent"
             value={board.title}
+            className="w-full text-xl outline-none bg-transparent"
             disabled={true}
           />
         </div>
@@ -59,7 +57,7 @@ function BoardCard({ board }: useDeleteBoardProps) {
             value={board.endDate}
           />
         </div>
-        {/* Duplicate, Delete 버튼 박스 */}
+        {/* 버튼 박스 */}
         <div className="flex items-center">
           <Button variant={"ghost"} className="font-normal text-[#6D6D6D]">
             Duplicate

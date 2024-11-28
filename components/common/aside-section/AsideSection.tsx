@@ -15,6 +15,7 @@ function AsideSection() {
   const { id } = useParams();
   const { tasks, getTasks } = useGetTasks();
   const { search } = useSearch();
+  /** 상태 값 */
   const user = useAtomValue(userAtom);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -33,7 +34,7 @@ function AsideSection() {
 
   return (
     <aside className="page__aside">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full gap-3">
         {/* 검색창 UI */}
         <SearchBar
           placeholder="검색어를 입력하세요."
@@ -50,7 +51,10 @@ function AsideSection() {
         {/* TODO 목록 UI 하나 */}
         <div className="flex flex-col mt-4 gap-2">
           <small className="text-sm font-medium leading-none text-[#A6A6A6]">
-            9Diin의 TODO-BOARD
+            <span className="text-neutral-700">
+              {user?.nickname ? user?.nickname : "알 수 없음님"}
+            </span>
+            의 TODO-BOARD
           </small>
           <ul className="flex flex-col">
             {tasks.length === 0 ? (

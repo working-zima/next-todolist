@@ -2,16 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import { useEffect, useState } from "react";
-
 import { useAtom } from "jotai";
-import { createClient } from "@/lib/supabase/client";
 
+import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import useEmailCheck from "@/hooks/use-email";
-
-import { userAtom } from "@/auth/atom";
 /** UI 컴포넌트 */
 import { FindPasswordPopup } from "@/components/common";
 import {
@@ -26,6 +22,7 @@ import {
   Label,
 } from "@/components/ui";
 import { Eye, EyeOff } from "@/public/assets/icons";
+import { userAtom } from "@/auth/atom";
 
 function LoginPage() {
   const supabase = createClient();
@@ -80,7 +77,8 @@ function LoginPage() {
         const userData = {
           id: data.user?.id || "",
           email: data.user?.email || "",
-          phone: data.user?.phone || "",
+          phoneNumber: data.user?.user_metadata.phoneNumber || "",
+          nickname: data.user?.user_metadata.nickname || "",
           imgUrl: "/assets/images/profile.jpg",
         };
         document.cookie = `user=${JSON.stringify(
@@ -89,7 +87,6 @@ function LoginPage() {
 
         // Jotai의 user에 관련된 상태 값을 업데이트
         setUser(userData);
-        router.push("/board"); // 로그인 페이지로 이동
       }
     } catch (error) {
       /** 네트워크 오류나 예기치 않은 에러를 잡기 위해 catch 구문 사용 */
@@ -100,6 +97,7 @@ function LoginPage() {
         description: "서버와 연결할 수 없습니다. 다시 시도해주세요!",
       });
     }
+    router.push("/board"); // 로그인 페이지로 이동
   };
 
   useEffect(() => {

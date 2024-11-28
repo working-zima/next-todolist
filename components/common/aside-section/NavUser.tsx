@@ -1,21 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 import { createClient } from "@/lib/supabase/client";
-
-import { User } from "@/auth/type";
-
 import { toast } from "@/hooks/use-toast";
 /** UI 컴포넌트 */
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { EditProfilePopup } from "@/components/common";
+import { User2, ChevronsUpDown, LogOut } from "@/public/assets/icons";
 import {
   Avatar,
   AvatarFallback,
@@ -23,12 +13,12 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui";
+import { User } from "@/auth/type";
 
 interface Props {
   user: User | null;
@@ -43,7 +33,8 @@ export function NavUser({ user }: Props) {
       const { error } = await supabase.auth.signOut();
 
       /** 쿠키 값 삭제(수정에 가까움 = 기간 만료) */
-      document.cookie = "user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+      // document.cookie = "user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "user= ; path=/; max-age=0;";
       /** 로컬스토리지 및 스토어 초기화 */
       localStorage.removeItem("user");
 
@@ -83,7 +74,9 @@ export function NavUser({ user }: Props) {
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">스나이퍼팩토리</span>
+            <span className="truncate font-semibold">
+              {user?.nickname ? user?.nickname : "닉네임 없음"}
+            </span>
             <span className="truncate text-xs">{user?.email}</span>
           </div>
           <ChevronsUpDown className="ml-auto size-4" />
@@ -102,35 +95,23 @@ export function NavUser({ user }: Props) {
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">스나이퍼팩토리</span>
+              <span className="truncate font-semibold">
+                {user?.nickname ? user?.nickname : "닉네임 없음"}
+              </span>
               <span className="truncate text-xs">{user?.email}</span>
             </div>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Sparkles />
-            Upgrade to Pro
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck />
+        <EditProfilePopup>
+          <div className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+            <User2 />
             Account
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+          </div>
+        </EditProfilePopup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
           <LogOut />
           Log out
         </DropdownMenuItem>
